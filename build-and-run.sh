@@ -4,6 +4,6 @@
 docker build -t agent-zero-local .
 
 # Run the container with port mapping
-docker run -d -p 50001:80 --name agentzero agent-zero-local
+docker run -d -p 80:80 --name agentzero agent-zero-local
 
-echo "Agent Zero is running at http://localhost:50001"
+echo "Agent Zero is running at http://localhost:80"

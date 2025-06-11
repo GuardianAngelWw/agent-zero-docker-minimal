@@ -11,7 +11,7 @@ Minimal repository for building and running frdel/agent-zero-run container.
 docker pull frdel/agent-zero-run
 
 # Run the container with port mapping
-docker run -p 50001:80 frdel/agent-zero-run
+docker run -p 80:80 frdel/agent-zero-run
 ```
 
 ### Option 2: Use the provided script

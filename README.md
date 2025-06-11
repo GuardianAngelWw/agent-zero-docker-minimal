@@ -1,27 +1,50 @@
 # agent-zero-docker-minimal
 
-Minimal repository for building and running frdel/agent-zero-run container.
+A repository that builds and runs the Agent Zero Docker container with proper build-time image pulling.
 
-## Usage
+## Setup Options
 
-### Option 1: Run the commands directly
+### Option 1: Direct Build and Run (Recommended)
 
-```bash
-# Pull the latest image
-docker pull frdel/agent-zero-run
-
-# Run the container with port mapping
-docker run -p 80:80 frdel/agent-zero-run
-```
-
-### Option 2: Use the provided script
+Use the provided script to both build a local image (which pulls the base image during build) and run it:
 
 ```bash
 # Make the script executable
-chmod +x start-agent-zero.sh
+chmod +x build-and-run.sh
 
-# Run the script
-./start-agent-zero.sh
+# Run the build and start script
+./build-and-run.sh
 ```
 
+This will:
+1. Build a local image (which pulls the base image during build)
+2. Run the container with the name "agentzero" on port 50001
+
+### Option 2: Manual Steps
+
+#### Build the image:
+
+```bash
+# This pulls the base image during build
+docker build -t agent-zero-local .
+```
+
+#### Run the container:
+
+```bash
+# Run the container
+docker run -p 50001:80 agent-zero-local
+```
+
+## Accessing the Service
+
 The service will be available at http://localhost:50001
+
+## Stopping and Removing
+
+To stop and remove the container:
+
+```bash
+docker stop agentzero
+docker rm agentzero
+```

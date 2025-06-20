@@ -23,11 +23,11 @@ RUN mkdir -p /etc/agent-zero/config
 RUN echo '{"whisper": {"enabled": false, "preload": false, "model": null}}' > /etc/agent-zero/config/audio.json
 
 # Expose the web interface port
-EXPOSE 80
+EXPOSE 8080
 
 # Add a healthcheck to monitor container stability
 HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
-  CMD curl -f http://localhost/ || exit 1
+  CMD curl -f http://localhost:8080/ || exit 1
 
 # Set the entrypoint with environment variables to ensure Whisper is not loaded
 ENTRYPOINT ["/bin/bash", "-c", "export A0_DISABLE_WHISPER=true A0_SKIP_WHISPER_PRELOAD=true A0_PRELOAD_DISABLED=true && /entrypoint.sh"]

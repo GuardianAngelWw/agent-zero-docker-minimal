@@ -41,7 +41,7 @@ docker build -t agent-zero-local .
 
 ```bash
 # Run the container
-docker run -p 50001:80 agent-zero-local
+docker run -p 50001:8080 agent-zero-local
 ```
 
 ## Zeabur Deployment

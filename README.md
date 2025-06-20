@@ -1,6 +1,14 @@
 # agent-zero-docker-minimal
 
-A repository that builds and runs the Agent Zero Docker container with proper build-time image pulling.
+A repository that builds and runs the Agent Zero Docker container with proper build-time image pulling and Kubernetes deployment support.
+
+## Features
+
+- Secure container configuration with non-root user
+- Health checks for better monitoring
+- Resource limits for stability
+- Kubernetes configurations with proper node affinity and tolerations
+- Google-style code for better maintainability
 
 ## Setup Options
 
@@ -18,7 +26,9 @@ chmod +x build-and-run.sh
 
 This will:
 1. Build a local image (which pulls the base image during build)
-2. Run the container with the name "agentzero" on port 50001
+2. Stop and remove any existing container with the same name
+3. Run the container with the name "agentzero" on port 50001
+4. Apply resource limits for better stability
 
 ### Option 2: Manual Steps
 
@@ -33,7 +43,17 @@ docker build -t agent-zero-local .
 
 ```bash
 # Run the container
-docker run -p 50001:80 agent-zero-local
+docker run -d -p 50001:80 --name agentzero --restart unless-stopped agent-zero-local
+```
+
+## Kubernetes Deployment
+
+To deploy in a Kubernetes cluster:
+
+```bash
+# Apply the Kubernetes manifests
+kubectl apply -f kubernetes/deployment.yaml
+kubectl apply -f kubernetes/service.yaml
 ```
 
 ## Accessing the Service
@@ -48,3 +68,10 @@ To stop and remove the container:
 docker stop agentzero
 docker rm agentzero
 ```
+
+## Security Features
+
+- Non-root user execution
+- Resource limits
+- Container isolation
+- Health checks for better reliability

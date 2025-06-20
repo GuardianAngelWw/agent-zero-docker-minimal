@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: agent-zero
+  labels:
+    app: agent-zero
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: agent-zero
+  template:
+    metadata:
+      labels:
+        app: agent-zero
+    spec:
+      # Add tolerations for the taints mentioned in the error logs
+      tolerations:
+      - key: "k8s.zeabur.com/tcp-proxy"
+        operator: "Exists"
+        effect: "NoSchedule"
+      - key: "node.kubernetes.io/not-ready"
+        operator: "Exists"
+        effect: "NoSchedule"
+      - key: "node.cloudprovider.kubernetes.io/uninitialized"
+        operator: "Exists"
+        effect: "NoSchedule"
+      
+      # Add affinity rules to ensure proper scheduling
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: "kubernetes.io/arch"
+                operator: In
+                values:
+                - "amd64"
+                - "arm64"
+          
+      containers:
+      - name: agent-zero
+        image: agent-zero-local
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 15
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1000
+          runAsGroup: 1000
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+      securityContext:
+        fsGroup: 1000

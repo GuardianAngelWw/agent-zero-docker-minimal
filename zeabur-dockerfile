@@ -1,12 +1,30 @@
 FROM frdel/agent-zero-run:latest
 
-# Set environment variables to reduce resource usage
+# Metadata labels
+LABEL maintainer="GuardianAngelWw"
+LABEL version="1.0.0" 
+LABEL description="Agent Zero Docker container optimized for Zeabur deployment"
+
+# Set environment variables to disable resource-intensive features
+# These are defined as separate variables for clarity and maintainability
 ENV A0_DISABLE_WHISPER=true
 ENV A0_DISABLE_SEARXNG=true
+ENV A0_WHISPER_MODEL=""
+ENV A0_SKIP_WHISPER_PRELOAD=true
+ENV A0_PRELOAD_DISABLED=true
 
-# Expose the port
+# Create configuration directory and add config to disable Whisper
+# This ensures the application doesn't try to load the model even if environment
+# variables are not properly handled
+RUN mkdir -p /etc/agent-zero/config && \
+    echo '{"whisper": {"enabled": false, "preload": false, "model": null}}' > /etc/agent-zero/config/audio.json
+
+# Expose the web interface port
 EXPOSE 80
 
 # Set a healthcheck to help with container stability
 HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
   CMD curl -f http://localhost/ || exit 1
+
+# Override the entrypoint to ensure our environment variables are set
+ENTRYPOINT ["/bin/bash", "-c", "export A0_DISABLE_WHISPER=true A0_SKIP_WHISPER_PRELOAD=true A0_PRELOAD_DISABLED=true && /entrypoint.sh"]

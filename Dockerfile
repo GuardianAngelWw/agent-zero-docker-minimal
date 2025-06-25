@@ -20,6 +20,13 @@ RUN addgroup --system appgroup && \
 # Set the working directory
 WORKDIR /app
 
+# Copy the entrypoint script from the base image to ensure it's accessible
+# This ensures we can find the entrypoint script in the right location
+RUN cp $(which agent-zero-entrypoint) /app/agent-zero-entrypoint || echo "Entrypoint not found at expected location"
+
+# Make the entrypoint script executable
+RUN chmod +x /app/agent-zero-entrypoint || echo "Could not make entrypoint executable"
+
 # Change ownership of the app directory to the non-root user
 RUN chown -R appuser:appgroup /app
 
@@ -29,5 +36,5 @@ USER appuser
 # Expose the port
 EXPOSE 80
 
-# Use a more specific CMD with proper shell form
-CMD ["sh", "-c", "echo 'Agent Zero is running on port 80' && exec /agent-zero-entrypoint"]
+# Use a more specific CMD with proper shell form that executes the entrypoint in the correct location
+CMD ["sh", "-c", "echo 'Agent Zero is running on port 80' && exec /app/agent-zero-entrypoint"]

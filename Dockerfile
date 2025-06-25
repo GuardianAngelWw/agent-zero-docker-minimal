@@ -7,7 +7,7 @@ LABEL maintainer="GuardianAngelWw" \
 
 # Set environment variables for better container configuration
 ENV NODE_ENV=production \
-    PORT=80
+    PORT=8080
 
 # Create a non-root user for better security
 RUN addgroup --system appgroup && \
@@ -35,7 +35,7 @@ RUN bash -c "echo 'Searching for agent-zero-entrypoint...' && \
         else \
             echo 'WARNING: agent-zero-entrypoint not found. Creating a placeholder script.'; \
             echo '#!/bin/sh' > /app/agent-zero-entrypoint; \
-            echo 'echo \"Agent Zero is now running on port 80\"' >> /app/agent-zero-entrypoint; \
+            echo 'echo \"Agent Zero is now running on port 8080\"' >> /app/agent-zero-entrypoint; \
             echo 'exec node /usr/local/bin/agent-zero-run || npm start || echo \"Failed to start Agent Zero\"' >> /app/agent-zero-entrypoint; \
             chmod +x /app/agent-zero-entrypoint; \
         fi; \
@@ -46,13 +46,13 @@ RUN chown -R appuser:appgroup /app
 
 # Add health check to improve container monitoring
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-  CMD wget --quiet --tries=1 --spider http://localhost:80 || exit 1
+  CMD wget --quiet --tries=1 --spider http://localhost:8080 || exit 1
 
 # Switch to the non-root user for better security
 USER appuser
 
 # Expose the port
-EXPOSE 80
+EXPOSE 8080
 
 # Use a proper CMD that executes the entrypoint we've verified exists
-CMD ["sh", "-c", "echo 'Agent Zero is running on port 80' && exec /app/agent-zero-entrypoint"]
+CMD ["sh", "-c", "echo 'Agent Zero is running on port 8080' && exec /app/agent-zero-entrypoint"]

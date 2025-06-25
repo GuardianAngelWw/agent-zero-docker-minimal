@@ -22,6 +22,8 @@ The following issues have been fixed in this branch:
 
 4. **Enhanced Error Logging**: Added better error logging to troubleshoot startup issues.
 
+5. **Port Update**: Changed the container port from 80 to 8080 to match server configuration.
+
 ## Setup Options
 
 ### Option 1: Direct Build and Run (Recommended)
@@ -55,7 +57,7 @@ docker build -t agent-zero-local .
 
 ```bash
 # Run the container
-docker run -d -p 50001:80 --name agentzero --restart unless-stopped agent-zero-local
+docker run -d -p 50001:8080 --name agentzero --restart unless-stopped agent-zero-local
 ```
 
 ## Kubernetes Deployment

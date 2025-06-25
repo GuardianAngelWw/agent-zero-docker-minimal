@@ -27,7 +27,7 @@ fi
 # Run the container with port mapping and resource limits
 echo "Starting container: ${CONTAINER_NAME}..."
 docker run -d \
-  -p ${PORT}:80 \
+  -p ${PORT}:8080 \
   --name ${CONTAINER_NAME} \
   --restart unless-stopped \
   --memory="512m" \

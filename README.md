@@ -4,13 +4,34 @@ A repository that builds and runs the Agent Zero Hacking Edition Docker containe
 
 ## Features
 
-- Agent Zero Hacking Edition with cybersecurity focus
-- Whisper speech-to-text model disabled for performance optimization
-- Secure container configuration with non-root user
-- Health checks for better monitoring
-- Resource limits for stability
-- Kubernetes configurations with proper node affinity and tolerations
-- Google-style code for better maintainability
+- **Agent Zero Hacking Edition** with cybersecurity focus
+- **Enhanced Cybersecurity Toolset** for penetration testing and security analysis
+- **Whisper speech-to-text model disabled** for performance optimization
+- **Secure container configuration** with non-root user
+- **Health checks** for better monitoring
+- **Resource limits** for stability
+- **Kubernetes configurations** with proper node affinity and tolerations
+- **Google-style code** for better maintainability
+
+## Agent Zero Hacking Edition vs Standard Edition
+
+The Hacking Edition of Agent Zero is based on Kali Linux and includes:
+
+- Pre-installed security tools and libraries
+- Specialized cybersecurity prompts and workflows
+- Enhanced image analysis capabilities
+- Better support for penetration testing tasks
+- Security-focused frameworks and utilities
+
+## Why Disable Whisper?
+
+Disabling the Whisper speech-to-text model provides several benefits:
+
+1. **Improved Performance**: Reduces memory usage and startup time
+2. **Smaller Container Size**: Eliminates large model files
+3. **Lower Resource Usage**: Better for resource-constrained environments
+4. **Faster API Responses**: Less overhead when processing requests
+5. **Focused Functionality**: Better tailored for cybersecurity text interactions
 
 ## Recent Fixes in the `fixed-dockerfile` Branch
 
@@ -100,6 +121,18 @@ docker rm agentzero-hacker
 - Resource limits
 - Container isolation
 - Health checks for better reliability
+- Disabled unnecessary services (Whisper)
+
+## Environment Variables
+
+The container uses several environment variables that can be customized:
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `DISABLE_WHISPER` | Prevents Whisper model loading | `true` |
+| `SKIP_WHISPER_DOWNLOAD` | Skips downloading Whisper model files | `true` |
+| `A0_DISABLE_SPEECH` | Disables speech processing features | `true` |
+| `PORT` | Internal port for the application | `8080` |
 
 ## Troubleshooting
 

@@ -26,7 +26,7 @@ docker build -t agent-zero-debug --progress=plain .
 # Run the container with interactive shell for debugging
 echo "Starting container in interactive mode for debugging..."
 docker run -it --name agent-zero-debug \
-    -p 50001:80 \
+    -p 50001:8080 \
     --entrypoint /bin/sh \
     agent-zero-debug
 

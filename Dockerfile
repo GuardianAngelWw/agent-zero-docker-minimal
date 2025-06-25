@@ -3,7 +3,7 @@ FROM frdel/agent-zero-run:hacking
 # Add labels for better container identification and management
 LABEL maintainer="GuardianAngelWw" \
       description="Agent Zero Hacking Edition with Whisper disabled" \
-      version="1.0.0"
+      version="1.0.1"
 
 # Set environment variables for better container configuration
 ENV NODE_ENV=production \
@@ -24,29 +24,8 @@ WORKDIR /app
 COPY fix-entrypoint.sh /app/fix-entrypoint.sh
 RUN chmod +x /app/fix-entrypoint.sh
 
-# Find the entrypoint in the base image and copy it to our working directory
-# This is a critical step to ensure the entrypoint is accessible
-RUN bash -c "echo 'Searching for agent-zero-entrypoint...' && \
-    if which agent-zero-entrypoint; then \
-        cp \$(which agent-zero-entrypoint) /app/agent-zero-entrypoint; \
-        chmod +x /app/agent-zero-entrypoint; \
-        echo 'Found and copied agent-zero-entrypoint'; \
-    else \
-        find / -name agent-zero-entrypoint -type f 2>/dev/null | head -1 | xargs -I{} cp {} /app/agent-zero-entrypoint; \
-        if [ -f /app/agent-zero-entrypoint ]; then \
-            chmod +x /app/agent-zero-entrypoint; \
-            echo 'Found and copied agent-zero-entrypoint using find'; \
-        else \
-            echo 'WARNING: agent-zero-entrypoint not found. Creating a placeholder script.'; \
-            echo '#!/bin/sh' > /app/agent-zero-entrypoint; \
-            echo 'echo \"Agent Zero Hacking Edition is now running on port 8080\"' >> /app/agent-zero-entrypoint; \
-            echo 'export DISABLE_WHISPER=true' >> /app/agent-zero-entrypoint; \
-            echo 'export SKIP_WHISPER_DOWNLOAD=true' >> /app/agent-zero-entrypoint; \
-            echo 'export A0_DISABLE_SPEECH=true' >> /app/agent-zero-entrypoint; \
-            echo 'exec python3 /a0/run_ui.py --no-whisper || node /usr/local/bin/agent-zero-run || npm start || echo \"Failed to start Agent Zero\"' >> /app/agent-zero-entrypoint; \
-            chmod +x /app/agent-zero-entrypoint; \
-        fi; \
-    fi"
+# Run the entrypoint fixer script
+RUN /app/fix-entrypoint.sh
 
 # Attempt to disable Whisper by renaming any existing model files
 RUN find / -path "*/whisper*" -type d -o -name "*whisper*" 2>/dev/null | \

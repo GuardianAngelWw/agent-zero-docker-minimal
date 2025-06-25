@@ -1,9 +1,11 @@
 # agent-zero-docker-minimal
 
-A repository that builds and runs the Agent Zero Docker container with proper build-time image pulling and Kubernetes deployment support.
+A repository that builds and runs the Agent Zero Hacking Edition Docker container with proper build-time image pulling and Kubernetes deployment support.
 
 ## Features
 
+- Agent Zero Hacking Edition with cybersecurity focus
+- Whisper speech-to-text model disabled for performance optimization
 - Secure container configuration with non-root user
 - Health checks for better monitoring
 - Resource limits for stability
@@ -22,7 +24,11 @@ The following issues have been fixed in this branch:
 
 4. **Enhanced Error Logging**: Added better error logging to troubleshoot startup issues.
 
-5. **Port Update**: Changed the container port from 80 to 8080 to match server configuration.
+5. **Updated to Hacking Edition**: Now using the specialized `frdel/agent-zero-run:hacking` image for cybersecurity tasks.
+
+6. **Disabled Whisper Model**: Optimized performance by disabling the Whisper speech-to-text model.
+
+7. **Port Changed to 8080**: Internal port changed to 8080 for better compatibility.
 
 ## Setup Options
 
@@ -39,10 +45,11 @@ chmod +x build-and-run.sh
 ```
 
 This will:
-1. Build a local image (which pulls the base image during build)
+1. Build a local image (which pulls the hacking edition base image during build)
 2. Stop and remove any existing container with the same name
-3. Run the container with the name "agentzero" on port 50001
+3. Run the container with the name "agentzero-hacker" on port 50001
 4. Apply resource limits for better stability
+5. Disable the Whisper model for improved performance
 
 ### Option 2: Manual Steps
 
@@ -50,14 +57,18 @@ This will:
 
 ```bash
 # This pulls the base image during build
-docker build -t agent-zero-local .
+docker build -t agent-zero-hacker-local .
 ```
 
 #### Run the container:
 
 ```bash
 # Run the container
-docker run -d -p 50001:8080 --name agentzero --restart unless-stopped agent-zero-local
+docker run -d -p 50001:8080 --name agentzero-hacker --restart unless-stopped \
+  -e DISABLE_WHISPER=true \
+  -e SKIP_WHISPER_DOWNLOAD=true \
+  -e A0_DISABLE_SPEECH=true \
+  agent-zero-hacker-local --no-whisper
 ```
 
 ## Kubernetes Deployment
@@ -79,8 +90,8 @@ The service will be available at http://localhost:50001
 To stop and remove the container:
 
 ```bash
-docker stop agentzero
-docker rm agentzero
+docker stop agentzero-hacker
+docker rm agentzero-hacker
 ```
 
 ## Security Features
@@ -94,6 +105,13 @@ docker rm agentzero
 
 If you encounter issues with the container not starting properly:
 
-1. Check container logs: `docker logs agentzero`
-2. Verify the entrypoint is accessible: `docker exec -it agentzero ls -la /app/agent-zero-entrypoint`
-3. Check if the base image has changed: `docker pull frdel/agent-zero-run:latest` and rebuild
+1. Check container logs: `docker logs agentzero-hacker`
+2. Verify the entrypoint is accessible: `docker exec -it agentzero-hacker ls -la /app/agent-zero-entrypoint`
+3. Check if the base image has changed: `docker pull frdel/agent-zero-run:hacking` and rebuild
+4. Make sure the Whisper model is properly disabled: `docker exec -it agentzero-hacker env | grep WHISPER`
+5. Check for missing files in the hacking image: `docker exec -it agentzero-hacker ls -la /a0`
+
+## Links
+
+- [Agent Zero GitHub Repository](https://github.com/frdel/agent-zero)
+- [Agent Zero Hacking Edition Demo](https://www.youtube.com/watch?v=3Qaw3bVpE-E)

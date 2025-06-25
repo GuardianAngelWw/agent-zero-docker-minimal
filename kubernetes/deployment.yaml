@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: agent-zero
+  name: agent-zero-hacker
   labels:
-    app: agent-zero
+    app: agent-zero-hacker
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: agent-zero
+      app: agent-zero-hacker
   template:
     metadata:
       labels:
-        app: agent-zero
+        app: agent-zero-hacker
     spec:
       # Add tolerations for the taints mentioned in the error logs
       tolerations:
@@ -39,11 +39,19 @@ spec:
                 - "arm64"
           
       containers:
-      - name: agent-zero
-        image: agent-zero-local
+      - name: agent-zero-hacker
+        image: agent-zero-hacker-local
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8080
+        env:
+        - name: DISABLE_WHISPER
+          value: "true"
+        - name: SKIP_WHISPER_DOWNLOAD
+          value: "true"
+        - name: A0_DISABLE_SPEECH
+          value: "true"
+        args: ["--no-whisper"]
         resources:
           requests:
             memory: "256Mi"

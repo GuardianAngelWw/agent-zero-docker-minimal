@@ -1,13 +1,17 @@
-FROM frdel/agent-zero-run:latest
+FROM frdel/agent-zero-run:hacking
 
 # Add labels for better container identification and management
 LABEL maintainer="GuardianAngelWw" \
-      description="Agent Zero Docker container with proper build-time image pulling" \
+      description="Agent Zero Hacking Edition with Whisper disabled" \
       version="1.0.0"
 
 # Set environment variables for better container configuration
 ENV NODE_ENV=production \
-    PORT=8080
+    PORT=8080 \
+    # Disable Whisper model loading
+    DISABLE_WHISPER=true \
+    SKIP_WHISPER_DOWNLOAD=true \
+    A0_DISABLE_SPEECH=true
 
 # Create a non-root user for better security
 RUN addgroup --system appgroup && \
@@ -35,11 +39,18 @@ RUN bash -c "echo 'Searching for agent-zero-entrypoint...' && \
         else \
             echo 'WARNING: agent-zero-entrypoint not found. Creating a placeholder script.'; \
             echo '#!/bin/sh' > /app/agent-zero-entrypoint; \
-            echo 'echo \"Agent Zero is now running on port 8080\"' >> /app/agent-zero-entrypoint; \
-            echo 'exec node /usr/local/bin/agent-zero-run || npm start || echo \"Failed to start Agent Zero\"' >> /app/agent-zero-entrypoint; \
+            echo 'echo \"Agent Zero Hacking Edition is now running on port 8080\"' >> /app/agent-zero-entrypoint; \
+            echo 'export DISABLE_WHISPER=true' >> /app/agent-zero-entrypoint; \
+            echo 'export SKIP_WHISPER_DOWNLOAD=true' >> /app/agent-zero-entrypoint; \
+            echo 'export A0_DISABLE_SPEECH=true' >> /app/agent-zero-entrypoint; \
+            echo 'exec python3 /a0/run_ui.py --no-whisper || node /usr/local/bin/agent-zero-run || npm start || echo \"Failed to start Agent Zero\"' >> /app/agent-zero-entrypoint; \
             chmod +x /app/agent-zero-entrypoint; \
         fi; \
     fi"
+
+# Attempt to disable Whisper by renaming any existing model files
+RUN find / -path "*/whisper*" -type d -o -name "*whisper*" 2>/dev/null | \
+    xargs -I{} bash -c 'if [ -e "{}" ]; then mv "{}" "{}.disabled" 2>/dev/null || true; echo "Disabled: {}"; fi'
 
 # Change ownership of the app directory to the non-root user
 RUN chown -R appuser:appgroup /app
@@ -55,4 +66,4 @@ USER appuser
 EXPOSE 8080
 
 # Use a proper CMD that executes the entrypoint we've verified exists
-CMD ["sh", "-c", "echo 'Agent Zero is running on port 8080' && exec /app/agent-zero-entrypoint"]
+CMD ["sh", "-c", "echo 'Agent Zero Hacking Edition is running on port 8080 (Whisper disabled)' && exec /app/agent-zero-entrypoint --no-whisper"]

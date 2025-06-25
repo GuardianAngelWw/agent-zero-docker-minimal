@@ -10,6 +10,18 @@ A repository that builds and runs the Agent Zero Docker container with proper bu
 - Kubernetes configurations with proper node affinity and tolerations
 - Google-style code for better maintainability
 
+## Recent Fixes in the `fixed-dockerfile` Branch
+
+The following issues have been fixed in this branch:
+
+1. **Fixed Entrypoint Not Found Error**: Resolved the `exec: /agent-zero-entrypoint: not found` error by implementing a robust entrypoint detection and copying mechanism.
+   
+2. **Improved CMD Syntax**: Fixed the syntax error in the CMD directive that was causing the container to fail.
+
+3. **Added Fallback Mechanism**: If the entrypoint cannot be found in the standard locations, a fallback script is created that attempts to start Agent Zero using alternative methods.
+
+4. **Enhanced Error Logging**: Added better error logging to troubleshoot startup issues.
+
 ## Setup Options
 
 ### Option 1: Direct Build and Run (Recommended)
@@ -75,3 +87,11 @@ docker rm agentzero
 - Resource limits
 - Container isolation
 - Health checks for better reliability
+
+## Troubleshooting
+
+If you encounter issues with the container not starting properly:
+
+1. Check container logs: `docker logs agentzero`
+2. Verify the entrypoint is accessible: `docker exec -it agentzero ls -la /app/agent-zero-entrypoint`
+3. Check if the base image has changed: `docker pull frdel/agent-zero-run:latest` and rebuild

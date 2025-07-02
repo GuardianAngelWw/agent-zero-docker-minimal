@@ -19,12 +19,12 @@ ENV A0_PRELOAD_DISABLED=true
 RUN mkdir -p /etc/agent-zero/config && \
     echo '{"whisper": {"enabled": false, "preload": false, "model": null}}' > /etc/agent-zero/config/audio.json
 
-# Expose the web interface port
-EXPOSE 8080
+# Expose the correct port (Agent Zero runs on port 80 internally)
+EXPOSE 80
 
-# Set a healthcheck to help with container stability
-HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
-  CMD curl -f http://localhost:8080/ || exit 1
+# Set a more lenient healthcheck for Zeabur environment
+HEALTHCHECK --interval=60s --timeout=30s --start-period=120s --retries=3 \
+  CMD curl -f http://localhost/ || wget -q --spider http://localhost/ || exit 1
 
 # Use the default entrypoint from the base image
 # The environment variables are already set above

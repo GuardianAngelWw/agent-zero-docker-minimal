@@ -3,31 +3,27 @@ FROM frdel/agent-zero-run:hacking
 # Metadata labels following Google container standards
 LABEL maintainer="GuardianAngelWw"
 LABEL version="1.0.0"
-LABEL description="Agent Zero Docker container with optimized resource usage"
+LABEL description="Agent Zero Hacking Edition with optimized resource usage"
 
 # Set environment variables to disable resource-intensive features
-# A0_DISABLE_WHISPER ensures the Whisper model is not loaded at startup
-# Using ARG and ENV pattern for flexibility
-ARG DISABLE_WHISPER=true
-ARG DISABLE_SEARXNG=true
-ENV A0_DISABLE_WHISPER=${DISABLE_WHISPER}
-ENV A0_DISABLE_SEARXNG=${DISABLE_SEARXNG}
-
-# Additional environment variables for stability
+# These must be set early and comprehensively to prevent model loading
+ENV A0_DISABLE_WHISPER=true
+ENV A0_DISABLE_SEARXNG=true
 ENV A0_WHISPER_MODEL=""
 ENV A0_SKIP_WHISPER_PRELOAD=true
 ENV A0_PRELOAD_DISABLED=true
+ENV A0_MEMORY_LIMIT=2048
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
-# Create a configuration to ensure Whisper isn't loaded
-RUN mkdir -p /etc/agent-zero/config
-RUN echo '{"whisper": {"enabled": false, "preload": false, "model": null}}' > /etc/agent-zero/config/audio.json
+# Create configuration directory and disable resource-intensive features
+RUN mkdir -p /etc/agent-zero/config && \
+    echo '{"whisper": {"enabled": false, "preload": false, "model": null}, "searxng": {"enabled": false}}' > /etc/agent-zero/config/audio.json && \
+    echo '{"memory_limit": "2GB", "cpu_limit": "1"}' > /etc/agent-zero/config/resources.json
 
-# Expose the web interface port
-EXPOSE 8080
+# Expose the correct port (Agent Zero runs on port 80 internally)
+EXPOSE 80
 
-# Add a healthcheck to monitor container stability
-HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
-  CMD curl -f http://localhost:8080/ || exit 1
-
-# Use the default entrypoint from the base image
-# The environment variables are already set above
+# Add a more lenient healthcheck for Zeabur environment
+HEALTHCHECK --interval=60s --timeout=30s --start-period=120s --retries=3 \
+  CMD curl -f http://localhost/ || wget -q --spider http://localhost/ || exit 1

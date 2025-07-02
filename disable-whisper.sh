@@ -103,7 +103,7 @@ if [ ! -z "$CONTAINER_NAME" ]; then
             echo -e "  -e A0_SKIP_WHISPER_PRELOAD=true \\"
             echo -e "  -e A0_PRELOAD_DISABLED=true \\"
             echo -e "  -e A0_WHISPER_MODEL=\"\" \\"
-            echo -e "  frdel/agent-zero-run:latest${NC}"
+            echo -e "  frdel/agent-zero-run:hacking${NC}"
             echo
             echo -e "${YELLOW}Run this command to create and start a container with Whisper disabled.${NC}"
         fi
@@ -118,7 +118,7 @@ else
     echo -e "  -e A0_SKIP_WHISPER_PRELOAD=true \\"
     echo -e "  -e A0_PRELOAD_DISABLED=true \\"
     echo -e "  -e A0_WHISPER_MODEL=\"\" \\"
-    echo -e "  frdel/agent-zero-run:latest${NC}"
+    echo -e "  frdel/agent-zero-run:hacking${NC}"
     echo
     echo -e "${BLUE}== Dockerfile Environment Variables ==${NC}"
     echo -e "${GREEN}ENV A0_DISABLE_WHISPER=true"

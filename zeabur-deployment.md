@@ -51,7 +51,7 @@ The logs show the container is being terminated unexpectedly after loading the W
 Try creating a custom Dockerfile for Zeabur that disables unnecessary services:
 
 ```dockerfile
-FROM frdel/agent-zero-run:latest
+FROM frdel/agent-zero-run:hacking
 
 # Set environment variables to reduce resource usage
 ENV A0_DISABLE_WHISPER=true

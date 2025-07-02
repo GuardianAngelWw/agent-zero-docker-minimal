@@ -1,4 +1,4 @@
-FROM frdel/agent-zero-run:latest
+FROM frdel/agent-zero-run:hacking
 
 # Metadata labels
 LABEL maintainer="GuardianAngelWw"
@@ -26,5 +26,5 @@ EXPOSE 8080
 HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
   CMD curl -f http://localhost:8080/ || exit 1
 
-# Override the entrypoint to ensure our environment variables are set
-ENTRYPOINT ["/bin/bash", "-c", "export A0_DISABLE_WHISPER=true A0_SKIP_WHISPER_PRELOAD=true A0_PRELOAD_DISABLED=true && /entrypoint.sh"]
+# Use the default entrypoint from the base image
+# The environment variables are already set above

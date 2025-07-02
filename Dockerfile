@@ -1,4 +1,4 @@
-FROM frdel/agent-zero-run:latest
+FROM frdel/agent-zero-run:hacking
 
 # Metadata labels following Google container standards
 LABEL maintainer="GuardianAngelWw"
@@ -29,5 +29,5 @@ EXPOSE 8080
 HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
   CMD curl -f http://localhost:8080/ || exit 1
 
-# Set the entrypoint with environment variables to ensure Whisper is not loaded
-ENTRYPOINT ["/bin/bash", "-c", "export A0_DISABLE_WHISPER=true A0_SKIP_WHISPER_PRELOAD=true A0_PRELOAD_DISABLED=true && /entrypoint.sh"]
+# Use the default entrypoint from the base image
+# The environment variables are already set above

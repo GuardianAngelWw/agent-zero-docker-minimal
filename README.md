@@ -1,6 +1,8 @@
 # agent-zero-docker-minimal
 
-A repository that builds and runs the Agent Zero Docker container with proper build-time image pulling and optimized resource usage.
+A repository that builds and runs the Agent Zero Hacking Edition Docker container with proper build-time image pulling and optimized resource usage.
+
+This setup uses the official `frdel/agent-zero-run:hacking` image as the base, which includes Kali Linux and cybersecurity-focused prompts.
 
 ## Resource Optimization Features
 

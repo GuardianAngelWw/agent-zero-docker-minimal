@@ -26,7 +26,7 @@ chmod +x build-and-run.sh
 
 This will:
 1. Build a local image (which pulls the base image during build)
-2. Run the container with the name "agentzero" on port 50001
+2. Run the container with the name "agentzero" on port 8080
 
 ### Option 2: Manual Steps
 
@@ -41,7 +41,7 @@ docker build -t agent-zero-local .
 
 ```bash
 # Run the container
-docker run -p 50001:8080 agent-zero-local
+docker run -p 8080:8080 agent-zero-local
 ```
 
 ## Zeabur Deployment
@@ -65,7 +65,7 @@ The following environment variables are preconfigured to disable resource-intens
 
 ## Accessing the Service
 
-The service will be available at http://localhost:50001
+The service will be available at http://localhost:8080
 
 ## Stopping and Removing
 

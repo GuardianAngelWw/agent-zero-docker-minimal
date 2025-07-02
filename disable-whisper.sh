@@ -98,7 +98,7 @@ if [ ! -z "$CONTAINER_NAME" ]; then
         if [[ $choice == "y" || $choice == "Y" ]]; then
             echo -e "${YELLOW}Creating docker run command with Whisper disabled...${NC}"
             echo
-            echo -e "${GREEN}docker run -d --name $CONTAINER_NAME -p 50001:80 \\"
+            echo -e "${GREEN}docker run -d --name $CONTAINER_NAME -p 8080:8080 \\"
             echo -e "  -e A0_DISABLE_WHISPER=true \\"
             echo -e "  -e A0_SKIP_WHISPER_PRELOAD=true \\"
             echo -e "  -e A0_PRELOAD_DISABLED=true \\"
@@ -113,7 +113,7 @@ else
     echo -e "${YELLOW}No container name provided. Here's how to disable Whisper:${NC}"
     echo
     echo -e "${BLUE}== Docker Run Command ==${NC}"
-    echo -e "${GREEN}docker run -d --name agentzero -p 50001:80 \\"
+    echo -e "${GREEN}docker run -d --name agentzero -p 8080:8080 \\"
     echo -e "  -e A0_DISABLE_WHISPER=true \\"
     echo -e "  -e A0_SKIP_WHISPER_PRELOAD=true \\"
     echo -e "  -e A0_PRELOAD_DISABLED=true \\"
